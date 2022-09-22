@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data=X , na.rm=FALSE, method="average"){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="average"){
 
   if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
   if(!(is.numeric(data[,value]))) {
@@ -36,14 +36,14 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data=X
   }
   
   
-# Example
+# # Example
 # species <- c("Daucus carota",  "Scorzoneroides autumnalis", "Silene latifolia", "Hypochaeris radicata")
-# d <- data.frame(species, plotA= runif(length(x)), plotB= runif(length(x)), plotC= runif(length(x)))  # create random dataframe with species as rows and plots as columns
+# d <- data.frame(species=species, plotA= runif(length(species)), plotB= runif(length(species)), plotC= runif(length(species)))  # create random dataframe with species as rows and plots as columns
 # rownames(d) <- d$species # make rownames
 # d$species <- NULL # remove species column
 # d <- as.data.frame(t(d))  # transpose dataframe
 
-# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = X, weighted = T, na.rm = T)
-# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = X, weighted = T, method = "sd")
+# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = indicativa, weighted = T, na.rm = T)
+# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = indicativa, weighted = T, method = "sd")
 
   
