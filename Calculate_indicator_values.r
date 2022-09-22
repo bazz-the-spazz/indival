@@ -4,9 +4,8 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", landolt=F, weighted=TRUE, data=X , na.rm=FALSE, method="average"){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data=X , na.rm=FALSE, method="average"){
 
-  value <- ifelse(landolt, paste(value, ".Landolt", sep=""), value) # Check if Landolt values are chosen
   if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
   if(!(is.numeric(data[,value]))) {
      cat(paste('"', value, '" is not numeric!\n', sep="") )
@@ -44,7 +43,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", landolt=F, weighted=T
 # d$species <- NULL # remove species column
 # d <- as.data.frame(t(d))  # transpose dataframe
 
-# get.indicator.value(d = d[,  ], value = "Feuchtezahl", landolt = T, data = X, weighted = T, na.rm = T)
-# get.indicator.value(d = d[,  ], value = "Feuchtezahl", landolt = TRUE, data = X, weighted = T, method = "sd")
+# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = X, weighted = T, na.rm = T)
+# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = X, weighted = T, method = "sd")
 
   
