@@ -10,4 +10,4 @@ This is a collection of R-scripts that:
 - Help aligning your species names with the collected data (*Correct_species_names.r*)
 - Calculate the weighted or mean indicator values for your vegetation surveys (*Calculate_indicator_values.r*)
 
-- There is also example.R that illustrates how it should work.
+- There is also an example that illustrates how it should work.
