@@ -1,8 +1,7 @@
-
 ## Get data from vegedaz
-# on windows: setwd("C:\\Program files\Vegedaz\Data")
+# on windows: setwd("C:\Program files\Vegedaz\Data")
 
-## Prepare Artlist
+# Prepare Artlist
 con <- file("Artlist.txt", encoding = "windows-1252" )
 artlist <- readLines(con = con)
 artlist <- artlist[-1]
@@ -33,7 +32,7 @@ artlist$Name <- paste(artlist$Genus, artlist$Species)
 artlist <- artlist[, c(ncol(artlist), 1:(ncol(artlist)-1))]
 
 
-## Prepare Flora Indivativa 2019
+# Prepare Flora Indivativa
 
 con <- file("FloInd.txt", encoding = "windows-1252" )
 ind <- readLines(con = con)
@@ -59,7 +58,7 @@ ind <- as.data.frame(do.call(rbind,ind[-1]))
 names(ind) <- n
 
 
-## Read Landolt - Values,, "Zeigerwerte Landolt und NISM Mai 2019"
+# Read Landolt - Values,, "Zeigerwerte Landolt und NISM Mai 2019"
 con <- file("ZeiLan.txt", encoding = "windows-1252" )
 landolt <- readLines(con = con)
 landolt <- landolt[-1] # get rid of first line
@@ -83,28 +82,28 @@ n <- sub(" .*", "", landolt[[1]])
 landolt <- as.data.frame(do.call(rbind,landolt[-1]))
 # dim(landolt)
 names(landolt) <- n
-names(landolt)[2:ncol(landolt)] <- paste(names(landolt)[2:ncol(landolt)] , ".Landolt", sep="")
+# names(landolt)[2:ncol(landolt)] <- paste(names(landolt)[2:ncol(landolt)] , ".Landolt", sep="")
 
 
-d <- merge(artlist, ind, by.x = "Latin", by.y = "Species", all=T)
-dd<- merge(d, landolt, by.x = "Latin", by.y = "Species", all=T)
+indicativa <- merge(artlist, ind,     by.x = "Latin", by.y = "Species", all.y=T, all.x=F)
+landolt <-    merge(artlist, landolt, by.x = "Latin", by.y = "Species", all=T)
 
 # # Make all the Zahl-Variables numeric
-
-dd$Feuchtezahl <- as.numeric(gsub("-",NA,dd$Feuchtezahl))
-dd$Naehrstoffzahl <- as.numeric(gsub("-",NA,dd$Naehrstoffzahl))
-dd$Wechselfeuchtezahl <- as.numeric(gsub("-",NA,dd$Wechselfeuchtezahl))
-dd$Reaktionszahl <- as.numeric(gsub("-",NA,dd$Reaktionszahl))
-dd$Humuszahl <- as.numeric(gsub("-",NA,dd$Humuszahl))
-dd$Durchlueftungszahl <- as.numeric(gsub("-",NA,dd$Durchlueftungszahl))
-dd$Salzzahl <- as.numeric(gsub("\\?","",dd$Salzzahl))
-for( i in grep("zahl", names(dd))){
-  dd[,i] <- as.numeric(dd[,i])
+indicativa$Feuchtezahl <- as.numeric(gsub("-",NA,indicativa$Feuchtezahl))
+indicativa$Naehrstoffzahl <- as.numeric(gsub("-",NA,indicativa$Naehrstoffzahl))
+indicativa$Wechselfeuchtezahl <- as.numeric(gsub("-",NA,indicativa$Wechselfeuchtezahl))
+indicativa$Reaktionszahl <- as.numeric(gsub("-",NA,indicativa$Reaktionszahl))
+indicativa$Humuszahl <- as.numeric(gsub("-",NA,indicativa$Humuszahl))
+indicativa$Durchlueftungszahl <- as.numeric(gsub("-",NA,indicativa$Durchlueftungszahl))
+indicativa$Salzzahl <- as.numeric(gsub("\\?","",indicativa$Salzzahl))
+for( i in grep("zahl", names(indicativa))){
+  indicativa[,i] <- as.numeric(indicativa[,i])
 }
 
-write.xlsx(dd, "Merged_Artenliste_FloInd_ZeiLan_2019.xlsx")
+for( i in grep("zahl", names(landolt))){
+  landolt[,i] <- as.numeric(landolt[,i])
+}
 
 # use Data that has at least one Zeigerwert
-dd <- dd[ which(rowSums(dd[,grep("zahl", names(dd))], na.rm = T) > 0), ]
-write.xlsx(dd, "Merged_Artenliste_FloInd_ZeiLan_2019_reduced.xlsx")
-
+indicativa <- indicativa[ which(rowSums(indicativa[,grep("zahl", names(indicativa))], na.rm = T) > 0), ]
+landolt <- landolt[ which(rowSums(landolt[,grep("zahl", names(landolt))], na.rm = T) > 0), ]
