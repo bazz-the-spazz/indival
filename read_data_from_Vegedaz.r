@@ -1,5 +1,9 @@
 ## Get data from vegedaz
-# on windows: setwd("C:\Program files\Vegedaz\Data")
+# # on windows:
+# setwd("C:\Program Files\Vegedaz\Daten\") ?
+# # on Linux:
+# setwd("~/.wine/drive_c/Program Files/Vegedaz/Daten/")
+
 
 # Prepare Artlist
 con <- file("Artlist.txt", encoding = "windows-1252" )
@@ -107,3 +111,6 @@ for( i in grep("zahl", names(landolt))){
 # use Data that has at least one Zeigerwert
 indicativa <- indicativa[ which(rowSums(indicativa[,grep("zahl", names(indicativa))], na.rm = T) > 0), ]
 landolt <- landolt[ which(rowSums(landolt[,grep("zahl", names(landolt))], na.rm = T) > 0), ]
+
+
+rm(artlist, ind, con, i, l, n)
