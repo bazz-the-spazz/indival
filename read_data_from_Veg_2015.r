@@ -1,5 +1,5 @@
 ## Get data from the application "VEG - Bearbeiten von Vegetationstabellen"
-# It contains the indicator values from Flora Helvetica 2015
+# It contains the indicator values from Flora Helvetica 2015 in the file "Zeigerliste.txt"
 # https://www.maerki.com/maerki_informatik/veg/index.html
 
 con <- file("Zeigerliste.txt", encoding = "windows-1252")
@@ -14,4 +14,6 @@ names(zeigerliste)[names(zeigerliste)=="Name nach Flora Helvetica"] <- "Latin"
 
 for(i in grep("zahl", x = names(zeigerliste))) zeigerliste[,i] <- as.numeric(zeigerliste[,i])
 zeigerliste$Wurzeltiefe <- as.numeric(zeigerliste$Wurzeltiefe)
+floraH <- zeigerliste
 
+rm(con, i, n, zeigerliste)
