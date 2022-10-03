@@ -12,6 +12,6 @@ This is a collection of R-scripts that:
 
 - There is also an example that illustrates how it should work. (*example.r*)
 
-## Download all script
+## Download all scripts
 
 use this link: [https://github.com/bazz-the-spazz/indival/zipball/master/](https://github.com/bazz-the-spazz/indival/zipball/master/)
