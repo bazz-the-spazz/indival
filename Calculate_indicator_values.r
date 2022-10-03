@@ -78,7 +78,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 	 Return <- (list(value=paste(ifelse(weighted, "weighted", ""), method, value), plots=R, species=r2))
-	 if(socio) Return <- append(Return, list(Pflanzengesellschaft=D))
+	 if(socio) Return <- append(Return, list(likely.Pflanzengesellschaft=D))
 
 
 		} else   Return <- (list(value=value, species=r2))
