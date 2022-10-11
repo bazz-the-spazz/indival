@@ -47,7 +47,7 @@ d
 
 # 4. 
 # Use the get.indicator.value()-function to calculate e.g. mean e.g. Temperaturzahl for the plots
-indi.temp.mean <- get.indicator.value(d=d, value = "Temperaturzahl", data = source, socio = T, propose.alternatives = T, method="mean") # *
+indi.temp.mean <- get.indicator.value(d=d, value = "Temperaturzahl", method="mean", data = source, propose.alternatives = T, socio = T) # *
 indi.temp.mean
 
 # * The argument 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species.
