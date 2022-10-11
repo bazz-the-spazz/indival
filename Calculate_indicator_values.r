@@ -100,7 +100,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				if(method=="sd"){ # if standard deviation is chosen
 					if(weighted) R[i] <- sd(t(d[i,])*data,na.rm=na.rm) else R[i] <- sd(t(d[i,])*data,na.rm=na.rm)
 				}
-				if(socio & method="average"){
+				if(socio & method=="average"){
 					if(weighted) x <-sozz(nam = names(d)[t(d[i,])>0], wheight=d[i,], data = data.bak)
 					if(!weighted) x <- sozz(nam = names(d)[t(d[i,])>0], data = data.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
@@ -108,12 +108,12 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			}
 
 			names(R) <-  rownames(d)
-			if(socio & method="average") names(D) <- rownames(d)
+			if(socio & method=="average") names(D) <- rownames(d)
 
 
 
 	 Return <- (list(value=paste(ifelse(weighted, "weighted", ""), method, value), plots=R, species=r2))
-	 if(socio & method="average") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
+	 if(socio & method=="average") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
 
 
 		} else   Return <- (list(value=value, species=r2))
