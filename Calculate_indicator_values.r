@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="average", socio=T){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="average", socio=T, propose.alternatives=T){
 
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
@@ -12,9 +12,42 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		do.calculations <- F} else do.calculations <- T
 
 		# subset the data
-		data.bak <- data
+		data.bak  <- X <- data
 		rownames(data) <- data$Latin
 		data <- data[names(d),value]  # values in correct order
+		
+		
+		# for propose.alternatives in case of missing values
+		if(propose.alternatives & TRUE %in% is.na(data) ){
+			for(i in names(d)[is.na(data)]){ # loop for each species with with missing values
+				
+				X$g <- sub(" .*", "", X$Latin) # get Genus of all Species
+				X$s <- sub(" .*", "", substr(stop   = 100, start = nchar(X$g)+2, x = X$Latin))
+				X$gs <- paste(X$g, X$s)
+				
+				#first get all entrys of the same species which have the data
+				x <- X$gs[X$Latin==i]
+				alternative <- X[X$gs==x & !is.na(X[,value]), "Latin" ]
+				# if(length(alternative)==0){ # if extend search to genus. 2b made
+				# }
+				
+				if(length(alternative)==1){
+					I <- answer <- 0
+					while(!(answer %in% 1:(length(alternative)+1) ) | answer==0 ){
+						if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
+						answer <- readline(prompt = 
+															 	paste("\nNo value for '", value, "' in '", i,"'. \nChoose other species:\n",
+																		paste(paste(1:length(alternative), ". ", alternative, " (", X[X$Latin==alternative, value], ")\n", sep=""), collapse = ""),
+																		paste(length(alternative)+1, ". keep '", i,"'.\n", sep = "" )
+																		, sep=""))
+						I <- 1
+					}
+					if(answer <= length(alternative)) data[names(d)==i] <-  X[X$Latin==alternative[as.numeric(answer)], value]
+				} 
+				
+			}
+		}
+		
 
 		# for sozio
 		cols <- c("Pflanzengesellschaft_1_txt", "Pflanzengesellschaft_2_txt", "Pflanzengesellschaft_3_txt")
