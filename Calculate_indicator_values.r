@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="average", socio=T, propose.alternatives=T){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="mean", socio=T, propose.alternatives=T){
 
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
@@ -94,13 +94,13 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			R <- as.numeric()
 			D <- as.character()
 			for(i in 1:nrow(d)){ # loop for each plot
-				if(method=="average"){
+				if(method=="mean"){
 					if(weighted) R[i] <- sum(t(d[i,])*data,na.rm=na.rm) else R[i] <- mean(t(d[i,])*data,na.rm=na.rm) # when weighted sum up the weighted components Else take the average of the occuring species
 				}
 				if(method=="sd"){ # if standard deviation is chosen
 					if(weighted) R[i] <- sd(t(d[i,])*data,na.rm=na.rm) else R[i] <- sd(t(d[i,])*data,na.rm=na.rm)
 				}
-				if(socio & method=="average"){
+				if(socio & method=="mean"){
 					if(weighted) x <-sozz(nam = names(d)[t(d[i,])>0], wheight=d[i,], data = data.bak)
 					if(!weighted) x <- sozz(nam = names(d)[t(d[i,])>0], data = data.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
@@ -108,12 +108,12 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			}
 
 			names(R) <-  rownames(d)
-			if(socio & method=="average") names(D) <- rownames(d)
+			if(socio & method=="mean") names(D) <- rownames(d)
 
 
 
 	 Return <- (list(value=paste(ifelse(weighted, "weighted", ""), method, value), plots=R, species=r2))
-	 if(socio & method=="average") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
+	 if(socio & method=="mean") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
 
 
 		} else   Return <- (list(value=value, species=r2))
