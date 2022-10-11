@@ -100,7 +100,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				if(method=="sd"){ # if standard deviation is chosen
 					if(weighted) R[i] <- sd(t(d[i,])*data,na.rm=na.rm) else R[i] <- sd(t(d[i,])*data,na.rm=na.rm)
 				}
-				if(socio){
+				if(socio & method="average"){
 					if(weighted) x <-sozz(nam = names(d)[t(d[i,])>0], wheight=d[i,], data = data.bak)
 					if(!weighted) x <- sozz(nam = names(d)[t(d[i,])>0], data = data.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
@@ -108,12 +108,12 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			}
 
 			names(R) <-  rownames(d)
-			if(socio) names(D) <- rownames(d)
+			if(socio & method="average") names(D) <- rownames(d)
 
 
 
 	 Return <- (list(value=paste(ifelse(weighted, "weighted", ""), method, value), plots=R, species=r2))
-	 if(socio) Return <- append(Return, list(likely.Pflanzengesellschaft=D))
+	 if(socio & method="average") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
 
 
 		} else   Return <- (list(value=value, species=r2))
@@ -121,13 +121,3 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		return(Return)
 }
 
-
-# # Example
-# species <- c("Daucus carota",  "Scorzoneroides autumnalis", "Silene latifolia", "Hypochaeris radicata")
-# d <- data.frame(species=species, plotA= runif(length(species)), plotB= runif(length(species)), plotC= runif(length(species)))  # create random dataframe with species as rows and plots as columns
-# rownames(d) <- d$species # make rownames
-# d$species <- NULL # remove species column
-# d <- as.data.frame(t(d))  # transpose dataframe
-
-# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = indicativa, weighted = T, na.rm = T)
-# get.indicator.value(d = d[,  ], value = "Temperaturzahl", data = indicativa, weighted = T, method = "sd")
