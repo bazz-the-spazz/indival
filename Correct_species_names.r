@@ -1,26 +1,6 @@
-# Functions to align your Species with Vegedaz
+# Function to align your Species with Vegedaz (or others)
 
-
-# Function 1: test for correct names (not very good but quick) for better Results use the following function choose.names()
-
-test.names <- function(names, data=X){ # Function to check if name is  the List
-  notin <- names[!(names %in% data$Name)]  # species not in list
-	h <- list() # check if there are similarly written species
-	for(i in 1:length(notin)) {
-	  xx <- agrep(notin[i], data$Name, value = TRUE, ignore.case = TRUE)
-	  if(length(xx>0)){
-	    h[length(h)+1] <- xx
-	    names(h)[length(h)] <- notin[i]
-	  }
-	}
-	return(list(not.found=notin, is.it.here=h))
-}
-
-# test <- c("Daucus carota",  "Scorzoneroides autumnalis", "Silene latifolia", "Hypochaeris radicata")
-# test.names(names=test)
-
-
-# Function 2. Look for correct names
+# Look for correct names
 # function to choose "real" name of all species (with subsp. / aggr. / author and all that Jazz!)
 ## You can write 'pause' to pause the process and proceed by inserting the obtained list with 'continue.after.pause'
 
