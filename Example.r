@@ -1,22 +1,26 @@
 
 # # Example
 
-#1. Run the scripts to get the source data:
+#1. Run the scripts to get the functions and the source data:
 
 source("Calculate_indicator_values.r")
 source("Correct_species_names.r")
 source("read_data_from_Vegedaz.r")
 
 
+# 1.1 
 # read data from Vegedaz (Flora Indicativa, Landolt)
 # path=("~/.wine/drive_c/Program Files/Vegedaz/Daten/") # on Linux
 # path=("C:\Program Files\Vegedaz\Daten\") # or wherever Vegedaz is located on Windows
 vegedaz <- read.vegedaz.data(path = "~/.wine/drive_c/Program Files/Vegedaz/Daten/")
 
-
+# 1.2
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
 source("read_data_from_Veg_2015.r")
 
+# 1.3
+## choose your data source to proceed
+source <- vegedaz$indicativa   # the options are 'vegedaz$landolt', 'vegedaz$indicativa' from Vegedaz, or 'floraH' from Veg
 
 #2.1 for the exercise  create a random dataframe (with species as rows and plots as columns)
 
@@ -32,9 +36,6 @@ d <- as.data.frame(t(d))
 
 #3. Use the choose.name()-function to correct the species names
 
-## choose your data source
-source <- vegedaz$indicativa # all options are 'landolt', 'indicativa' from Vegedaz, or 'floraH' from Veg
-
 corrected.names <- choose.name(names = names(d), data = source)
 names(d) <- corrected.names
 
@@ -44,5 +45,5 @@ get.indicator.value(d=d, value = "Temperaturzahl", data = source, socio = T, pro
 get.indicator.value(d=d, value = "Temperaturzahl", data = source, method = "sd")
 
 
-# * The argument 'socio=' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species.
+# * The argument 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species.
 
