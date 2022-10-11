@@ -15,39 +15,41 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		data.bak  <- X <- data
 		rownames(data) <- data$Latin
 		data <- data[names(d),value]  # values in correct order
-		
-		
+
+
 		# for propose.alternatives in case of missing values
 		if(propose.alternatives & TRUE %in% is.na(data) ){
 			for(i in names(d)[is.na(data)]){ # loop for each species with with missing values
-				
+
 				X$g <- sub(" .*", "", X$Latin) # get Genus of all Species
 				X$s <- sub(" .*", "", substr(stop   = 100, start = nchar(X$g)+2, x = X$Latin))
 				X$gs <- paste(X$g, X$s)
-				
+
 				#first get all entrys of the same species which have the data
 				x <- X$gs[X$Latin==i]
 				alternative <- X[X$gs==x & !is.na(X[,value]), "Latin" ]
 				# if(length(alternative)==0){ # if extend search to genus. 2b made
 				# }
-				
-				if(length(alternative)==1){
+
+				if(length(alternative)>0){
 					I <- answer <- 0
 					while(!(answer %in% 1:(length(alternative)+1) ) | answer==0 ){
 						if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
-						answer <- readline(prompt = 
-															 	paste("\nNo value for '", value, "' in '", i,"'. \nChoose other species:\n",
-																		paste(paste(1:length(alternative), ". ", alternative, " (", X[X$Latin==alternative, value], ")\n", sep=""), collapse = ""),
-																		paste(length(alternative)+1, ". keep '", i,"'.\n", sep = "" )
-																		, sep=""))
+						cat(paste("\nNo value '", value, "' for '", i,"'. Choose other species:\n",
+											paste(
+												paste(1:length(alternative), ". ", alternative, " (", X[X$Latin %in% alternative, value], ")\n", sep="")
+												, collapse = ""),
+											paste(length(alternative)+1, ". keep '", i,"'.\n", sep = "" )
+											, sep=""))
+						answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1,":", sep=""))
 						I <- 1
 					}
 					if(answer <= length(alternative)) data[names(d)==i] <-  X[X$Latin==alternative[as.numeric(answer)], value]
-				} 
-				
+				}
+
 			}
 		}
-		
+
 
 		# for sozio
 		cols <- c("Pflanzengesellschaft_1_txt", "Pflanzengesellschaft_2_txt", "Pflanzengesellschaft_3_txt")
@@ -70,7 +72,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 						D$Frequency.w <- 0
 						if(ncol(wheight)>1) wheight <- as.data.frame(t(wheight))
 						for(i in nam){
-							h <- as.character(t(data[data$Latin==i, cols])) 
+							h <- as.character(t(data[data$Latin==i, cols]))
 							h <- h[h!=""]
 							for(j in h){
 								D$Frequency.w[D$Gesellschaft==j] <- D$Frequency.w[D$Gesellschaft==j] + D[D$Gesellschaft==j, "Frequency"]*wheight[i,1]
