@@ -38,15 +38,19 @@ d
 
 # 3. 
 # Use the choose.name()-function to correct the species names according to the chosen source
-names(d) <- corrected.names <- choose.name(names = names(d), data = source)
+corrected.names <- choose.name(names = names(d), data = source)
 corrected.names
+names(d) <- corrected.names
 d
+
+## if you're tired of choosing species names you can type 'pause' and later resume the task with: choose.name(names = names(d), data = source, continue.after.pause = corrected.names)
 
 # 4. 
 # Use the get.indicator.value()-function to calculate average e.g. Temperaturzahl for the plots
-get.indicator.value(d=d, value = "Temperaturzahl", data = source, socio = T, propose.alternatives = T) # *
-get.indicator.value(d=d, value = "Temperaturzahl", data = source, method = "sd")
-
+indi.temp.mean <- get.indicator.value(d=d, value = "Temperaturzahl", data = source, socio = T, propose.alternatives = T) # *
+indi.temp.mean
+indi.temp.sd <- get.indicator.value(d=d, value = "Temperaturzahl", data = source, method = "sd")
+indi.temp.sd
 
 # * The argument 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species.
 
