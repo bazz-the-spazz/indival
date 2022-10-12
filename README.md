@@ -6,7 +6,7 @@ This is a collection of R-scripts that:
       - based on Flora Indicativa (Flora indicativa und NISM Mai 2019 Nuller korrigiert)
       - based on Landolt (Zeigerwerte Landolt und NISM Mai 2019)
     - [Veg, a software to manage vegetation data](https://www.maerki.com/maerki_informatik/veg/index.html)  (read_data_from_Veg_2015.r)
-      - based on Flora Helvetica v.5 und Flora Indicativa	ca. 2015
+      - based on Flora Helvetica v.5 und Flora Indicativa	ca. 2014
 - Help aligning your species names with the collected data (*Correct_species_names.r*)
 - Calculate the weighted or mean indicator values for your vegetation surveys (*Calculate_indicator_values.r*)
 
