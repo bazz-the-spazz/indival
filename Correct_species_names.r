@@ -58,7 +58,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 		}
 	}
 
-	if(write.tmp.file) write.csv(data.frame(oldnames=names[1:length(newnames)], newnames=newnames), "tmp.csv", row.names = F)
+	if(write.tmp.file) write.csv(data.frame(oldnames=names[1:length(newnames)], newnames=newnames), "tmp.csv")
 
 	return(newnames)
 }
