@@ -67,23 +67,26 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 					D <- D[D$Gesellschaft!="",] # ignore those with no information
 
-					#wheight the frequency by abundance
-					if(!missing(wheight)){
-						D$Frequency.w <- 0
-						if(ncol(wheight)>1) wheight <- as.data.frame(t(wheight))
-						for(i in nam){
-							h <- as.character(t(data[data$Latin==i, cols]))
-							h <- h[h!=""]
-							for(j in h){
-								D$Frequency.w[D$Gesellschaft==j] <- D$Frequency.w[D$Gesellschaft==j] + D[D$Gesellschaft==j, "Frequency"]*wheight[i,1]
+					if(nrow(D)>0){ # if there are no data for the community skip the rest
+						#wheight the frequency by abundance
+						if(!missing(wheight)){
+							D$Frequency.w <- 0
+							if(ncol(wheight)>1) wheight <- as.data.frame(t(wheight))
+							for(i in nam){
+								h <- as.character(t(data[data$Latin==i, cols]))
+								h <- h[h!=""]
+								for(j in h){
+									D$Frequency.w[D$Gesellschaft==j] <- D$Frequency.w[D$Gesellschaft==j] + D[D$Gesellschaft==j, "Frequency"]*wheight[i,1]
+								}
 							}
+							D$Frequency <- D$Frequency.w
+							D$Frequency.w <- NULL
 						}
-						D$Frequency <- D$Frequency.w
-						D$Frequency.w <- NULL
-					}
 
-					D <- D[order(D$Frequency, decreasing = T),] # order
-					return(D)
+						D <- D[order(D$Frequency, decreasing = T),] # order
+
+						return(D)
+					} else return(data.frame(Gesellschaft="", Frequency=0, Frequency.w=0))
 				}
 
 
