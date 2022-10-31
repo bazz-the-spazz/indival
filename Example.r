@@ -6,7 +6,7 @@
 source("Calculate_indicator_values.r")
 source("Correct_species_names.r")
 source("read_data_from_Vegedaz.r")
-
+source("read_data_from_Veg_2015.r")
 
 # 1.1 
 # read data from Vegedaz (Flora Indicativa, Landolt)
@@ -16,7 +16,7 @@ vegedaz <- read.vegedaz.data(path = "C:\Program Files\Vegedaz\Daten\")
 
 # 1.2
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
-source("read_data_from_Veg_2015.r")
+floraH <- getVegData(path="")
 
 # 1.3
 ## choose your data source to proceed
