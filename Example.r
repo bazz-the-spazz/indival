@@ -12,7 +12,7 @@ source("transpose_data.r")
 # 1.1 
 # read data from Vegedaz (Flora Indicativa, Landolt)
 # path=("~/.wine/drive_c/Program Files/Vegedaz/Daten/") # on Linux
-# path=("C:\Program Files\Vegedaz\Daten\") # or wherever Vegedaz is located on Windows
+# path=("C:/Program Files/Vegedaz/Daten/") # or wherever Vegedaz is located on Windows
 vegedaz <- read.vegedaz.data(path = "C:/Program Files/Vegedaz/Daten/")
 
 # 1.2
