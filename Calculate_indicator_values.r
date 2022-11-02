@@ -35,7 +35,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 					I <- answer <- 0
 					while(!(answer %in% 1:(length(alternative)+1) ) | answer==0 ){
 						if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
-						cat(paste("\nNo value '", value, "' for '", i,"'. Choose other species:\n",
+						cat(paste("\n",i, ": No value '", value, "'. Choose other species:\n",
 											paste(
 												paste(1:length(alternative), ". ", alternative, " (", X[X$Latin %in% alternative, value], ")\n", sep="")
 												, collapse = ""),
