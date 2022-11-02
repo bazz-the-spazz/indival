@@ -23,7 +23,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 					g <-  sub(" .*", "", i)
 					if(!(g %in% X$g)) { # if genus not found compare to all species
 						x <- agrep(i, X$Latin, value = TRUE, ignore.case = TRUE)
-						cat(paste('Genus "', g, '"not found\n', sep = ""))
+						cat(paste('Genus "', g, '" not found\n', sep = ""))
 						if(length(x)==1) cat(paste('"', i, '" was corrected to "',x, '"\n', "\n", sep = "" ))
 					} else { #if genus is found, search only within genus
 						x <- agrep(i, X$Latin[X$g==g], value = TRUE, ignore.case = TRUE)
