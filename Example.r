@@ -7,12 +7,13 @@ source("Calculate_indicator_values.r")
 source("Correct_species_names.r")
 source("read_data_from_Vegedaz.r")
 source("read_data_from_Veg_2015.r")
+source("transpose_data.r")
 
 # 1.1 
 # read data from Vegedaz (Flora Indicativa, Landolt)
 # path=("~/.wine/drive_c/Program Files/Vegedaz/Daten/") # on Linux
 # path=("C:\Program Files\Vegedaz\Daten\") # or wherever Vegedaz is located on Windows
-vegedaz <- read.vegedaz.data(path = "C:\Program Files\Vegedaz\Daten\")
+vegedaz <- read.vegedaz.data(path = "C:/Program Files/Vegedaz/Daten/")
 
 # 1.2
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
@@ -31,9 +32,9 @@ d <- data.frame(species=species, plotA= runif(length(species)), plotB= runif(len
 d
 
 # 2.2 transpose the data.frame for the analyses (species as columns and plots as rows)
-row.names(d) <- d$species
-d$species <- NULL
-d <- as.data.frame(t(d))
+d <- transpose.data(data = d)
+rownames(d) <- d[,1]
+d <- d[,-1]
 d
 
 # 3. 
