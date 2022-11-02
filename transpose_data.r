@@ -1,16 +1,20 @@
-transpose.data <- function(file){
+# Function to reshuffle your data from where each column is one Plot, to each row equals one Plot.
+
+transpose.data <- function(file, data){
   
-  # First: read data. 
-  if(length(grep(".xlsx", file, ignore.case = T))>0){
-    require(openxlsx)
-    data <- read.xlsx(file)
-  } else {
-    if(length(grep(".csv", file, ignore.case = T))>0){
-      data <- read.csv(file)
+  # First: read file, if data is missing. 
+  if(missing(data)){
+    if(length(grep(".xlsx", file, ignore.case = T))>0){
+      require(openxlsx)
+      data <- read.xlsx(file)
     } else {
-      data <- read.table(file)
+      if(length(grep(".csv", file, ignore.case = T))>0){
+        data <- read.csv(file)
+      } else {
+        data <- read.table(file)
+      }
     }
-  }
+   }
   
   # Transpose the data frame
   x <- names(data)[-1]
