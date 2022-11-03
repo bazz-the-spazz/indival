@@ -41,7 +41,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 
 				if(length(x)>1) { # if there are option, ask for a choice
 					cat(paste('"',i, '" was not found in List. Alternatives:\n', paste(paste(1:length(x),x, sep = " - "), collapse = '\n'), sep = ""))
-					nr <- readline(prompt = paste('Choose number:' ,'', sep=""))
+					nr <- readline(prompt = paste('\nChoose number:' ,'', sep=""))
 					if(nr=="pause") pause <- T else  {
 						z <- x[as.numeric(nr)]
 						cat(paste('"', i, '" was corrected to "',z, '"\n', "\n", sep = "" ))
