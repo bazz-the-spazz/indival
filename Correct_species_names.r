@@ -5,6 +5,7 @@
 ## You can write 'pause' to pause the process and proceed by inserting the obtained list with 'continue.after.pause'
 
 choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
+	names <- gsub("_", " ", names) # use blanks
 	X <- data
 	X$g <- sub(" .*", "", X$Latin) # get Genus of all Species
 	pause <- F
