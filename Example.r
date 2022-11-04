@@ -52,7 +52,7 @@ indi.temp.mean <- get.indicator.value(d=d, value = "Temperaturzahl", weighted = 
 indi.temp.mean
 
 
-# 'd=' is your data.frame, columnnames are the corrected species names and the columns only contain numbers.
+# 'd=' is your data.frame, column names are the corrected species names and the columns only contain numbers.
 # 'value=' is the indicator value you are interested in. Must be numeric.
 # 'weighted=' should the indicator value be weighted by the abundance of the species?
 # 'data='  is the data that contains the indicator value for each species.
