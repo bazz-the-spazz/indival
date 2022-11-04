@@ -60,4 +60,4 @@ indi.temp.mean
 # 'method=' do you want the average value ("mean") or the standard deviation ("sd")?
 # 'propose.alternatives' sometimes a indicator value is missing but another subspecies might have it.
 
-# 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species. _
+# 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species. ___
