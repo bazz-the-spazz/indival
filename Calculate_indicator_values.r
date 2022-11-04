@@ -20,6 +20,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		# for propose.alternatives in case of missing values
 		if(propose.alternatives & TRUE %in% is.na(data) ){
 			
+			N <- names(d)
 			nams <- namso <-  names(d)[is.na(data)]
 			nams <- paste(nams , " ") # add blank at the end
 			nams <- gsub(" ", "  ", nams) # double all the blanks in the names
@@ -65,12 +66,19 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 						answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1,":", sep=""))
 						I <- 1
 					}
-					if(as.numeric(answer) <= length(alternative)) data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
+					if(as.numeric(answer) <= length(alternative)) {
+						data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
+						N[N==namso[i]] <- alternative[as.numeric(answer)]
+					}
 				}
 				
 			}
 		}
+	
 		
+		
+		r2 <- data.frame(species=names(d), value=data)
+		if(!identical(names(d), N)) r2$used.species <- N # if you used alternatives, report them	
 		
 		# for sozio
 		cols <- c("Pflanzengesellschaft_1_txt", "Pflanzengesellschaft_2_txt", "Pflanzengesellschaft_3_txt")
@@ -125,8 +133,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			} else return(data.frame(Gesellschaft="", Frequency=0, Frequency.w=0))
 		}
 		
-		
-		r2 <- data.frame(species=names(d), value=data)
+
 		
 		if(do.calculations){
 			if(weighted) d <- d/rowSums(d) else d[d>0 & !is.na(d)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
