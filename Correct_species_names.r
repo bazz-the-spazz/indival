@@ -74,7 +74,12 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 
 				if(length(x)>1) { # if there are option, ask for a choice
 					cat(paste('"',i.back, '" was not found in List. Alternatives:\n', paste(paste(1:length(x),x, sep = " - "), collapse = '\n'), sep = ""))
-					nr <- readline(prompt = paste('Choose number (zero to keep original):' ,'', sep=""))
+					nr <- ""
+					while(!(nr %in% c("zero","NA",0:length(x)))) {
+						nr <- readline(prompt = paste('Choose number (zero to keep original):' ,'', sep=""))
+						if(!(nr %in% c("zero","NA",0:length(x))))	cat("Sorry, do it again!")
+					}
+
 					if(nr=="pause") pause <- T else  {
 						if(nr %in% c("zero", 0)){
 							z <- i.back
