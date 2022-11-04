@@ -18,9 +18,9 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		
 		
 		# for propose.alternatives in case of missing values
+		N <- names(d)
 		if(propose.alternatives & TRUE %in% is.na(data) ){
 			
-			N <- names(d)
 			nams <- namso <-  names(d)[is.na(data)]
 			nams <- paste(nams , " ") # add blank at the end
 			nams <- gsub(" ", "  ", nams) # double all the blanks in the names
@@ -54,8 +54,9 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				
 				
 				if(length(alternative)>0){
-					I <- answer <- 0
-					while(!(answer %in% 1:(length(alternative)+1) ) | answer==0 ){
+					I <-  0
+					answer <- -1
+					while(!(answer %in% 1:(length(alternative)+1) ) | answer==-1 ){
 						if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
 						cat(paste("\n",namso[i], ": No value '", value, "'. Choose other species:\n",
 											paste(
@@ -63,8 +64,9 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 												, collapse = ""),
 											paste(length(alternative)+1, ". keep '", namso[i],"'.\n", sep = "" )
 											, sep=""))
-						answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1,":", sep=""))
+						answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1," (or zero):", sep=""))
 						I <- 1
+						if(answer %in% c("zero", 0) ) answer <- length(alternative)+1
 					}
 					if(as.numeric(answer) <= length(alternative)) {
 						data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
