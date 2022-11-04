@@ -49,9 +49,9 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				
 				alternative <- character()
 				if(length(x)==1) alternative <- X[X$gs==x & !is.na(X[,value]), "Latin" ]
-				if(length(x)>1) alternative <- X[X$g== sub(" .*", "", x)  & !is.na(X[,value]), "Latin" ]
-					
-					
+				if(length(x)>1) alternative <- X[X$g %in% sub(" .*", "", x)  & !is.na(X[,value]), "Latin" ]
+				
+				
 				
 				if(length(alternative)>0){
 					I <- answer <- 0
@@ -74,7 +74,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				
 			}
 		}
-	
+		
 		
 		
 		r2 <- data.frame(species=names(d), value=data)
@@ -99,7 +99,15 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				#wheight the frequency by abundance
 				if(!missing(wheight)){
 					D$Frequency.w <- 0
-					if(ncol(wheight)>1) wheight <- as.data.frame(t(wheight))
+					
+					names(wheight) <- nam
+					for(i in nam[which(duplicated(nam))]) {
+						wheight[,which(names(wheight)==i)[1]] <- max(wheight[,names(wheight)==i])
+						wheight <- wheight[,-which(names(wheight)==i)[2]]
+					}
+					wheight <- as.data.frame(t(wheight))
+					nam <- unique(nam)
+					
 					for(i in nam){
 						h <- as.character(t(data[data$Latin==i, cols]))
 						h <- h[h!=""]
@@ -133,7 +141,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			} else return(data.frame(Gesellschaft="", Frequency=0, Frequency.w=0))
 		}
 		
-
+		
 		
 		if(do.calculations){
 			if(weighted) d <- d/rowSums(d) else d[d>0 & !is.na(d)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
@@ -147,8 +155,8 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 					if(weighted) R[i] <- sd(t(d[i,])*data,na.rm=na.rm) else R[i] <- sd(t(d[i,])*data,na.rm=na.rm)
 				}
 				if(socio & method=="mean"){
-					if(weighted) x <-sozz(nam = names(d)[t(d[i,])>0], wheight=d[i,], data = data.bak)
-					if(!weighted) x <- sozz(nam = names(d)[t(d[i,])>0], data = data.bak)
+					if(weighted) x <-sozz(nam = N[t(d[i,])>0], wheight=(d[i,t(d[i,])>0]), data = data.bak)
+					if(!weighted) x <- sozz(nam = N[t(d[i,])>0], data = data.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
 				}
 			}
