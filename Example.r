@@ -17,7 +17,7 @@ vegedaz <- read.vegedaz.data(path)
 
 # 1.2
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
-# floraH <- getVegData(path="")
+floraH <- getVegData(path="")
 
 # 1.3
 ## choose your data source to proceed
