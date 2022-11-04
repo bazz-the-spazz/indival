@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=FALSE, method="mean", socio=T, propose.alternatives=T){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T){
 	
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
