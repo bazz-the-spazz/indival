@@ -22,6 +22,14 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 				i <- gsub("_"," ", i)   # get rid of underscores
 				i <- paste(i, " ", sep="") # add a blank at the end
 				i <- gsub("  "," ", i)   # get rid of double blanks
+
+				cf <- sp <- F
+				if(length(grep(" cf ", i, ignore.case = T))>0) cf <- T
+				if(length(grep(" sp ", i, ignore.case = T))>0) sp <- T
+
+				i <- gsub(" cf "," ", i)   # get rid of cf
+				i <- gsub(" sp "," ", i)   # get rid of sp
+
 				x <- character()  # x will be the new name
 
 				toggle <- F # a switch for when Species name is changed
@@ -50,7 +58,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 
 				# When only one option: check if there is "cf" or "sp" in the name before automatically correcting.
 				if(length(x)==1) {
-					if(length(grep(" cf ", i, ignore.case = T))>0){ # if there is a cf
+					if(cf){ # if there is a cf
 						cat(paste('\n"cf" detected in "',i.back, '". What do we do?', '\n1. Change to "', x, '?\n2. Keep "', i.back, '"?', sep="" ))
 						nr <- 0
 						while(!(nr %in% 1:2)) {
@@ -59,7 +67,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 						}
 						x <- ifelse(nr==1, x, i.back)
 					}
-					if(length(grep(" sp ", i, ignore.case = T))>0){  # if there is a sp
+					if(sp){  # if there is a sp
 						cat(paste('\n"sp" detected in "',i, '". What do we do?', '\n1. Change to "', x, '?\n2. Keep "', i.back, '"?', sep="" ))
 						nr <- 0
 						while(!(nr %in% 1:2)) {
