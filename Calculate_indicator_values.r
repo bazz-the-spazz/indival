@@ -25,60 +25,61 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			nams <- namso <-  names(d)[is.na(data)]
 			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% data.bak$Latin]
 
+			if(length(nams)>0){
+
+				nams <- paste(nams , " ") # add blank at the end
+				nams <- gsub(" ", "  ", nams) # double all the blanks in the names
+				nams <- gsub("cf\\.", "cf ", nams) # double all the blanks in the names
+				nams <- gsub("sp\\.", "sp ", nams) # double all the blanks in the names
+				for(i in c( "_", " cf ", " sp ", "   ", "  ", "  ")) nams <- gsub(i, " ", nams) # remove all the points, underscores, "cf", "sp", tripple and double blanks from the names
+				nams <- substr(nams, start = 1, stop = nchar(nams)-1) # remove the blank from the end
+
+				X$g <- sub(" .*", "", X$Latin) # get Genus of all Species
+				X$s <- sub(" .*", "", substr(stop   = 100, start = nchar(X$g)+2, x = X$Latin))
+				X$gs <- paste(X$g, X$s)
 
 
-			nams <- paste(nams , " ") # add blank at the end
-			nams <- gsub(" ", "  ", nams) # double all the blanks in the names
-			nams <- gsub("cf\\.", "cf ", nams) # double all the blanks in the names
-			nams <- gsub("sp\\.", "sp ", nams) # double all the blanks in the names
-			for(i in c( "_", " cf ", " sp ", "   ", "  ", "  ")) nams <- gsub(i, " ", nams) # remove all the points, underscores, "cf", "sp", tripple and double blanks from the names
-			nams <- substr(nams, start = 1, stop = nchar(nams)-1) # remove the blank from the end
 
-			X$g <- sub(" .*", "", X$Latin) # get Genus of all Species
-			X$s <- sub(" .*", "", substr(stop   = 100, start = nchar(X$g)+2, x = X$Latin))
-			X$gs <- paste(X$g, X$s)
+				for(i in 1:length(nams)){ #names(d)[is.na(data)]){ # loop for each species with with missing values
 
 
-
-			for(i in 1:length(nams)){ #names(d)[is.na(data)]){ # loop for each species with with missing values
-
-
-				#first get all entrys of the same species which have the data
-				x <- X$gs[X$Latin==nams[i]]
-				if(length(x)==0) {
-					x <- X$gs[X$gs==nams[i]]
+					#first get all entrys of the same species which have the data
+					x <- X$gs[X$Latin==nams[i]]
 					if(length(x)==0) {
-						x <- unique(X$gs[agrep(nams[i], X$gs)])
+						x <- X$gs[X$gs==nams[i]]
+						if(length(x)==0) {
+							x <- unique(X$gs[agrep(nams[i], X$gs)])
+						}
 					}
+
+					alternative <- character()
+					if(length(x)==1) alternative <- X[X$gs==x & !is.na(X[,value]), "Latin" ]
+					if(length(x)>1) alternative <- X[X$g %in% sub(" .*", "", x)  & !is.na(X[,value]), "Latin" ]
+
+
+
+					if(length(alternative)>0){
+						I <-  0
+						answer <- -1
+						while(!(answer %in% 1:(length(alternative)+1) ) | answer==-1 ){
+							if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
+							cat(paste("\n",namso[i], ": No value '", value, "'. Choose other species:\n",
+												paste(
+													paste(1:length(alternative), ". ", alternative, " (", X[X$Latin %in% alternative, value], ")\n", sep="")
+													, collapse = ""),
+												paste(length(alternative)+1, ". keep '", namso[i],"'.\n", sep = "" )
+												, sep=""))
+							answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1," (or zero):", sep=""))
+							I <- 1
+							if(answer %in% c("zero", 0) ) answer <- length(alternative)+1
+						}
+						if(as.numeric(answer) <= length(alternative)) {
+							data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
+							N[N==namso[i]] <- alternative[as.numeric(answer)]
+						}
+					}
+
 				}
-
-				alternative <- character()
-				if(length(x)==1) alternative <- X[X$gs==x & !is.na(X[,value]), "Latin" ]
-				if(length(x)>1) alternative <- X[X$g %in% sub(" .*", "", x)  & !is.na(X[,value]), "Latin" ]
-
-
-
-				if(length(alternative)>0){
-					I <-  0
-					answer <- -1
-					while(!(answer %in% 1:(length(alternative)+1) ) | answer==-1 ){
-						if(I>0) cat(paste("\n Only NUMBERS between 1 and",length(alternative)+1,"allowed.\n"))
-						cat(paste("\n",namso[i], ": No value '", value, "'. Choose other species:\n",
-											paste(
-												paste(1:length(alternative), ". ", alternative, " (", X[X$Latin %in% alternative, value], ")\n", sep="")
-												, collapse = ""),
-											paste(length(alternative)+1, ". keep '", namso[i],"'.\n", sep = "" )
-											, sep=""))
-						answer <- readline(prompt = paste("Choose number between 1 and ",length(alternative)+1," (or zero):", sep=""))
-						I <- 1
-						if(answer %in% c("zero", 0) ) answer <- length(alternative)+1
-					}
-					if(as.numeric(answer) <= length(alternative)) {
-						data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
-						N[N==namso[i]] <- alternative[as.numeric(answer)]
-					}
-				}
-
 			}
 		}
 
