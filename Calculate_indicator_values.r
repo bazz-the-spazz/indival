@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, diversities=TRUE){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, stetigkeit=FALSE, diversities=TRUE){
 
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
@@ -16,6 +16,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		rownames(data) <- data$Latin
 		data <- data[names(d),value]  # values in correct order
 
+		if(diversities) d.diversity.backup <- d # special backup for diversity
 
 		# for propose.alternatives in case of missing values
 		N <- names(d)
@@ -264,7 +265,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 		if(do.calculations){
-			if(weighted) d <- d/rowSums(d) else d[d>0 & !is.na(d)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
+			if(weighted) d <- d/rowSums(d, na.rm = T) else d[d>0 & !is.na(d)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
 			R <- as.numeric()
 			D <- as.character()
 			for(i in 1:nrow(d)){ # loop for each plot
@@ -287,19 +288,28 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 			Return <- (list(value=paste(ifelse(weighted, "weighted", ""), method, value), plots=R, species=r2))
-			if(socio & method=="mean") Return <- append(Return, list(likely.Pflanzengesellschaft=D))
+			if(socio & method=="mean") Return <- append(Return, list(common.Pflanzengesellschaft=D))
 
+			if(stetigkeit & socio){
+				dd <- d
+				dd[is.na(dd)] <- 0
+				dd[dd>0] <- 1
+				stetigkeit <- colSums(dd)/nrow(dd)
+				Return <- append(Return, list(stetigkeit=stetigkeit))
+			}
 
 		} else   Return <- (list(value=value, species=r2))
 
 		if(diversities){
-			sr <- diversitee(x = d, q = 0)$D
+			sr <- diversitee(x = d.diversity.backup, q = 0)$D
 			Return <- append(Return, list("Species richness"=sr))
 			if(weighted){
-				esh <- diversitee(x = d, q = 1)
+				esh <- diversitee(x = d.diversity.backup, q = 1)
 				Return <- append(Return, list("effective Shannon diversity"=esh$D, "Beta diversity"=esh$beta))
 			}
 		}
+
+
 
 		return(Return)
 }
