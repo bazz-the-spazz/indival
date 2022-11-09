@@ -16,6 +16,10 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 		rownames(data) <- data$Latin
 		data <- data[names(d),value]  # values in correct order
 
+		# change NAs to zero
+		d[is.na(d)] <- 0
+
+
 		if(diversities) d.diversity.backup <- d # special backup for diversity
 
 		# for propose.alternatives in case of missing values
