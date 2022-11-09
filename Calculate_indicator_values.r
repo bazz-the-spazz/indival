@@ -4,7 +4,7 @@
 ## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, stetigkeit=FALSE, diversities=TRUE){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=TRUE){
 
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
@@ -20,9 +20,13 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 		# for propose.alternatives in case of missing values
 		N <- names(d)
-		if(propose.alternatives & TRUE %in% is.na(data) ){
+		if((propose.alternatives | propose.alternatives.full) & TRUE %in% is.na(data) ){
 
 			nams <- namso <-  names(d)[is.na(data)]
+			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% data.bak$Latin]
+
+
+
 			nams <- paste(nams , " ") # add blank at the end
 			nams <- gsub(" ", "  ", nams) # double all the blanks in the names
 			nams <- gsub("cf\\.", "cf ", nams) # double all the blanks in the names
