@@ -34,7 +34,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 
 				toggle <- F # a switch for when Species name is changed
 
-				while(length(x)==0 & !(i %in% c("pause", "zero", "NA", as.character(0:9))) ){ # keep asking Names  till there is a good suggesetion or name is "NA" or a number (0-9) or "pause"
+				while(length(x)==0 & !(i %in% c("pause", "zero", "NA", as.character(0:10000))) ){ # keep asking Names  till there is a good suggesetion or name is "NA" or a number (0-9) or "pause"
 					if(toggle) i.back <- i  # change species name when switch is on
 					g <-  sub(" .*", "", i)
 
@@ -50,15 +50,18 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 						cat(paste('"', i.back, '" was not found in List.\n', sep=""))
 						i <- readline('Enter a new name (zero to keep original):')# if no similar name is found, ask for a total new name
 						if(!(i %in% c("zero", 0, "NA"))) toggle <- T  # toggle the switch when a new name is typed in
+						if(i =="pause") pause <- T # toggle pause to true
 					}
 				}
 
 				# when name was "NA" or number, put in original name
-				if(i %in% c("NA", "zero", as.character(0:9))) x <- i.back
+				if(i %in% c("NA", "zero", as.character(0:10000))) x <- i.back
 
 				# When only one option: check if there is "cf" or "sp" in the name before automatically correcting.
 				if(length(x)==1) {
-					if(cf){ # if there is a cf
+
+					### Dealing with cf and sp
+					if(cf & !(i %in% c(0,"zero"))){ # if there is a cf
 						cat(paste('\n"cf" detected in "',i.back, '". What do we do?', '\n1. Change to "', x, '?\n2. Keep "', i.back, '"?', sep="" ))
 						nr <- 0
 						while(!(nr %in% 1:2)) {
@@ -67,7 +70,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 						}
 						x <- ifelse(nr==1, x, i.back)
 					}
-					if(sp){  # if there is a sp
+					if(sp & !(i %in% c(0,"zero"))){  # if there is a sp
 						cat(paste('\n"sp" detected in "',i, '". What do we do?', '\n1. Change to "', x, '?\n2. Keep "', i.back, '"?', sep="" ))
 						nr <- 0
 						while(!(nr %in% 1:2)) {
@@ -76,6 +79,8 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 						}
 						x <- ifelse(nr==1, x, i.back)
 					}
+
+
 					if(x!=i.back)cat(paste('"', i.back, '" was corrected to "',x, '"\n', "\n", sep = "" ))
 				}
 
@@ -83,9 +88,9 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 				if(length(x)>1) { # if there are option, ask for a choice
 					cat(paste('"',i.back, '" was not found in List. Alternatives:\n', paste(paste(1:length(x),x, sep = " - "), collapse = '\n'), sep = ""))
 					nr <- ""
-					while(!(nr %in% c("zero","NA",0:length(x)))) {
+					while(!(nr %in% c("zero","NA", "pause" ,0:length(x)))) {
 						nr <- readline(prompt = paste('Choose number (zero to keep original):' ,'', sep=""))
-						if(!(nr %in% c("zero","NA",0:length(x))))	cat("Sorry, do it again!")
+						if(!(nr %in% c("zero","NA", "pause",0:length(x))))	cat("Sorry, do it again!")
 					}
 
 					if(nr=="pause") pause <- T else  {
