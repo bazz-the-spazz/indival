@@ -1,10 +1,10 @@
 
 
 # Function to calculate weighted or mean indicator values
-## data has to be in the form: columns are species, rows are plots, rownames are the names of the plots
+## data (abundance or presence/absence (0, 1)) has to be in the form: columns are species, rows are plots. Optionally: rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=TRUE){
+get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=F, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=F){
 
 	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
 	if(!(is.numeric(data[,value]))) {
