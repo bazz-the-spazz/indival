@@ -4,30 +4,49 @@
 ## data (abundance or presence/absence (0, 1)) has to be in the form: columns are species, rows are plots. Optionally: rownames are the names of the plots
 
 
-get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data , na.rm=TRUE, method="mean", socio=F, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=F){
 
-	if(!(value %in% names(data))) warning( paste('"', value, '" is not in data!', sep=""), immediate. = F, call. = TRUE)
-	if(!(is.numeric(data[,value]))) {
+
+get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", weighted=TRUE, source, na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=F){
+
+
+
+	if(!(value %in% names(source))) warning( paste('"', value, '" is not in source!', sep=""), immediate. = F, call. = TRUE)
+
+	if(!(is.numeric(source[,value]))) {
 		cat(paste('"', value, '" is not numeric!\n', sep="") )
 		do.calculations <- F} else do.calculations <- T
 
-		# subset the data
-		data.bak  <- X <- data
-		rownames(data) <- data$Latin
-		data <- data[names(d),value]  # values in correct order
+		# Manage Data
+		# Use correct names
+		if(!missing(corrected.names)){
+			if(length(corrected.names) != ncol(data)){
+				if(length(corrected.names) > ncol(data)){
+					warning("To many species in corrected.names", call. = F)
+				} else {
+					warning("To few species in corrected.names", call. = F)
+				}
+			}
+			names(data) <- corrected.names
+		}
 
 		# change NAs to zero
-		d[is.na(d)] <- 0
+		data[is.na(data)] <- 0
 
 
-		if(diversities) d.diversity.backup <- d # special backup for diversity
+		# subset the source data
+		source.bak  <- X <- source
+		rownames(source) <- source$Latin
+		source <- source[names(data),value]  # values in correct order
+
+
+		if(diversities) d.diversity.backup <- data # special backup for diversity
 
 		# for propose.alternatives in case of missing values
-		N <- names(d)
-		if((propose.alternatives | propose.alternatives.full) & TRUE %in% is.na(data) ){
+		N <- names(data)
+		if((propose.alternatives | propose.alternatives.full) & TRUE %in% is.na(source) ){
 
-			nams <- namso <-  names(d)[is.na(data)]
-			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% data.bak$Latin]
+			nams <- namso <-  names(data)[is.na(source)]
+			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% source.bak$Latin]
 
 			if(length(nams)>0){
 
@@ -44,7 +63,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 
-				for(i in 1:length(nams)){ #names(d)[is.na(data)]){ # loop for each species with with missing values
+				for(i in 1:length(nams)){ #names(data)[is.na(source)]){ # loop for each species with with missing values
 
 
 					#first get all entrys of the same species which have the data
@@ -78,7 +97,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 							if(answer %in% c("zero", 0) ) answer <- length(alternative)+1
 						}
 						if(as.numeric(answer) <= length(alternative)) {
-							data[names(d)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
+							source[names(data)==namso[i]] <-  X[X$Latin==alternative[as.numeric(answer)], value]
 							N[N==namso[i]] <- alternative[as.numeric(answer)]
 						}
 					}
@@ -89,14 +108,14 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 
-		r2 <- data.frame(species=names(d), value=data)
-		if(!identical(names(d), N)) r2$used.species <- N # if you used alternatives, report them
+		r2 <- data.frame(species=names(data), value=source)
+		if(!identical(names(data), N)) r2$used.species <- N # if you used alternatives, report them
 
 		# for sozio
 		cols <- c("Pflanzengesellschaft_1_txt", "Pflanzengesellschaft_2_txt", "Pflanzengesellschaft_3_txt")
-		if(unique(cols %in% names(data.bak))==F) socio <- F
+		if(unique(cols %in% names(source.bak))==F) socio <- F
 
-		sozz <- function(nam, wheight, data=data.bak){
+		sozz <- function(nam, wheight, data=source.bak){
 			# Function to look-up which Plant-Society is the most likely
 			k <- as.character(as.matrix(data[data$Latin %in% nam, cols])) # all mentioned societies
 			su <- sort(unique(k)) # unique societies
@@ -169,16 +188,16 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 				p <- x/sum(x)
 
 				if(NA %in% p){
-					d <- NA
+					data <- NA
 				} else {
 					if(Q==1){
-						d <- exp(-sum(p*log(p))) #q=1 is not definded, calculate Shannon
-						if(raw) d <- -sum(p*log(p)) # needed for Alpha
+						data <- exp(-sum(p*log(p))) #q=1 is not definded, calculate Shannon
+						if(raw) data <- -sum(p*log(p)) # needed for Alpha
 					} else {
-						d <- sum(p^Q)^(1/(1-Q)) # Else use Jost's universal formula
+						data <- sum(p^Q)^(1/(1-Q)) # Else use Jost's universal formula
 					}
 				}
-				return(d)
+				return(data)
 			}
 
 
@@ -274,25 +293,25 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 
 		if(do.calculations){
-			if(weighted) d <- d/rowSums(d, na.rm = T) else d[d>0 & !is.na(d)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
+			if(weighted) data <- data/rowSums(data, na.rm = T) else data[data>0 & !is.na(data)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
 			R <- as.numeric()
 			D <- as.character()
-			for(i in 1:nrow(d)){ # loop for each plot
+			for(i in 1:nrow(data)){ # loop for each plot
 				if(method=="mean"){
-					if(weighted) R[i] <- sum(t(d[i,])*data,na.rm=na.rm) else R[i] <- mean(t(d[i,])*data,na.rm=na.rm) # when weighted sum up the weighted components Else take the average of the occuring species
+					if(weighted) R[i] <- sum(t(data[i,])*source,na.rm=na.rm) else R[i] <- mean(t(data[i,])*source,na.rm=na.rm) # when weighted sum up the weighted components Else take the average of the occuring species
 				}
 				if(method=="sd"){ # if standard deviation is chosen
-					if(weighted) R[i] <- sd(t(d[i,])*data,na.rm=na.rm) else R[i] <- sd(t(d[i,])*data,na.rm=na.rm)
+					if(weighted) R[i] <- sd(t(data[i,])*source,na.rm=na.rm) else R[i] <- sd(t(data[i,])*source,na.rm=na.rm)
 				}
 				if(socio & method=="mean"){
-					if(weighted) x <-sozz(nam = N[t(d[i,])>0], wheight=(d[i,t(d[i,])>0]), data = data.bak)
-					if(!weighted) x <- sozz(nam = N[t(d[i,])>0], data = data.bak)
+					if(weighted) x <-sozz(nam = N[t(data[i,])>0], wheight=(data[i,t(data[i,])>0]), data = source.bak)
+					if(!weighted) x <- sozz(nam = N[t(data[i,])>0], data = source.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
 				}
 			}
 
-			names(R) <-  rownames(d)
-			if(socio & method=="mean") names(D) <- rownames(d)
+			names(R) <-  rownames(data)
+			if(socio & method=="mean") names(D) <- rownames(data)
 
 
 
@@ -300,7 +319,7 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 			if(socio & method=="mean") Return <- append(Return, list(common.Pflanzengesellschaft=D))
 
 			if(stetigkeit & socio){
-				dd <- d
+				dd <- data
 				dd[is.na(dd)] <- 0
 				dd[dd>0] <- 1
 				stetigkeit <- colSums(dd)/nrow(dd)
@@ -322,4 +341,23 @@ get.indicator.value <- function(d, value="Temperaturzahl", weighted=TRUE, data ,
 
 		return(Return)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
