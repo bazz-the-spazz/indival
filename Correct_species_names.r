@@ -49,6 +49,7 @@ choose.name <- function(names, data=X, write.tmp.file=T, continue.after.pause){
 					if(length(x)==0) { # when species was not found, ask for a new name
 						cat(paste('"', i.back, '" was not found in List.\n', sep=""))
 						i <- readline('Enter a new name (zero to keep original):')# if no similar name is found, ask for a total new name
+						if(i=="") i <- i.back
 						if(!(i %in% c("zero", 0, "NA"))) toggle <- T  # toggle the switch when a new name is typed in
 						if(i =="pause") pause <- T # toggle pause to true
 					}
