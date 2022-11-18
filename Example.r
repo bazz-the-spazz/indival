@@ -37,27 +37,39 @@ rownames(d) <- d[,1]  # plots as rownames
 d <- d[,-1]						# Remove plot column
 d
 
+
 # 3.
 # Use the choose.name()-function to correct the species names according to the chosen source
 corrected.names <- choose.name(names = names(d), data = source)
 corrected.names
-names(d) <- corrected.names
-d
 
-## if you're tired of choosing species names you can type 'pause' and later resume the task with: choose.name(names = names(d), data = source, continue.after.pause = corrected.names)
+## if you're tired of choosing species names you can type 'pause' and later resume the task with:
+# choose.name(names = names(d), data = source, continue.after.pause = corrected.names)
+
 
 # 4.
 # Use the get.indicator.value()-function to calculate e.g. mean e.g. Temperaturzahl for the plots
-indi.temp.mean <- get.indicator.value(d=d, value = "Temperaturzahl", weighted = T, data = source, propose.alternatives = T, socio = T, na.rm = T)
+indi.temp.mean <- get.indicator.value(
+	data=d,
+	corrected.names = corrected.names,
+	value = "Temperaturzahl",
+	weighted = T,
+	source = source,
+	na.rm = T,
+	propose.alternatives = T)
+
 indi.temp.mean
 
 
-# 'd=' is your data.frame, column names are the corrected species names and the columns only contain numbers.
+# 'data=' is your data.frame, column names are the corrected species names and the columns only contain numbers.
+# 'corrected.names=' the string of names received from the choose.name-function in the same order as the columns of data. (optional)
 # 'value=' is the indicator value you are interested in. Must be numeric.
 # 'weighted=' should the indicator value be weighted by the abundance of the species?
-# 'data='  is the data that contains the indicator value for each species.
+# 'source='  is the data that contains the indicator value for each species.
 # 'na.rm=' should missing indicator values be ignored?
 # 'method=' do you want the average value ("mean") or the standard deviation ("sd")?
-# 'propose.alternatives' sometimes a indicator value is missing but another subspecies might have it.
-
+# 'propose.alternatives=TRUE' sometimes a indicator value is missing but another subspecies might have it.
+# 'propose.alternatives.full=TRUE' similar to the choose.name-function, the algorhythm is looking for similar sounding species.
 # 'socio=TRUE' only works when vegedaz$indicativa is chosen as data source. It guesses the Vegetation type from the most common (wheighted) associated Vegetation type of all component species.
+# 'stetigkeit=TRUE' the "Stetigkeit" is calculated.
+# 'diversities = TRUE' Species richness, effective Shannon diversity, and Beta-Diversity are calculated.
