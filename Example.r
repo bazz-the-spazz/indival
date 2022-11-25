@@ -63,7 +63,7 @@ indi.temp.mean
 
 # 'data=' is your data.frame, column names are the corrected species names and the columns only contain numbers.
 # 'corrected.names=' the string of names received from the choose.name-function in the same order as the columns of data. (optional)
-# 'value=' is the indicator value you are interested in. Must be numeric.
+# 'value=' is the indicator value you are interested in. Need not to be numeric. There are many options. Check out names(vegedaz$indicativa).
 # 'weighted=' should the indicator value be weighted by the abundance of the species?
 # 'source='  is the data that contains the indicator value for each species.
 # 'na.rm=' should missing indicator values be ignored?
