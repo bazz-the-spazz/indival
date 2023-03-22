@@ -5,7 +5,6 @@ This is a collection of R-scripts that:
     - [Vegedaz 2021](https://www.wsl.ch/en/services-und-produkte/software-websites-und-apps/vegedaz.html) (*read_data_from_Vegedaz.r*)
       - based on Flora Indicativa (Flora indicativa und NISM Mai 2019 Nuller korrigiert)
       - based on Landolt (Zeigerwerte Landolt und NISM Mai 2019)
-      - - ... extract the indicator_value data from
     - [Vegedaz 2023](https://www.wsl.ch/en/services-und-produkte/software-websites-und-apps/vegedaz.html) (*read_data_from_Vegedaz2023.r*)
       - based on Landolt (???)
     - [Veg, a software to manage vegetation data](https://www.maerki.com/maerki_informatik/veg/index.html)  (read_data_from_Veg_2015.r)
