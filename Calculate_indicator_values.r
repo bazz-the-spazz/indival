@@ -6,12 +6,13 @@
 
 
 
-get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", weighted=TRUE, source, na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=F){
+get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", weighted=TRUE, source, na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=T){
 
 
-
+	# Check if value is in the source
 	if(!(value %in% names(source))) warning( paste('"', value, '" is not in source!', sep=""), immediate. = F, call. = TRUE)
 
+	# Check if value is a numeric
 	if(!(is.numeric(source[,value]))) {
 		cat(paste('"', value, '" is not numeric!\n', sep="") )
 		do.calculations <- F} else do.calculations <- T
@@ -29,9 +30,9 @@ get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", w
 			names(data) <- corrected.names
 		}
 
-		# change NAs to zero
+		# change NAs to zero and backup
 		data[is.na(data)] <- 0
-
+		data.bak <- data
 
 		# subset the source data
 		source.bak  <- X <- source
@@ -46,7 +47,7 @@ get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", w
 		if((propose.alternatives | propose.alternatives.full) & TRUE %in% is.na(source) ){
 
 			nams <- namso <-  names(data)[is.na(source)]
-			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% source.bak$Latin]
+			if(propose.alternatives.full==FALSE)  nams <- namso <- nams[nams %in% source.bak$Latin] # propose.alternatives will only check for species that previously have been corrected. propose.alternatives.full will search alternatives for all species without a value (also for 'cf's etc)
 
 			if(length(nams)>0){
 
@@ -293,7 +294,12 @@ get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", w
 
 
 		if(do.calculations){
-			if(weighted) data <- data/rowSums(data, na.rm = T) else data[data>0 & !is.na(data)] <- 1  # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
+			if(weighted) {   # when the weighted values are needed, make that plots add up to 1. Else make the data presence absence.
+				data.w <- data/rowSums(data, na.rm = T) # wheighted
+				data.w2 <- data/rowSums(data[,which(!is.na(source))], na.rm = T)  # wheighted but ignore plants without Indicator value
+				data.w2[, is.na(source)] <- NA
+				data <- data.w2
+			}  else data[data>0 & !is.na(data)] <- 1
 			R <- as.numeric()
 			D <- as.character()
 			for(i in 1:nrow(data)){ # loop for each plot
@@ -304,8 +310,8 @@ get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", w
 					if(weighted) R[i] <- sd(t(data[i,])*source,na.rm=na.rm) else R[i] <- sd(t(data[i,])*source,na.rm=na.rm)
 				}
 				if(socio & method=="mean"){
-					if(weighted) x <-sozz(nam = N[t(data[i,])>0], wheight=(data[i,t(data[i,])>0]), data = source.bak)
-					if(!weighted) x <- sozz(nam = N[t(data[i,])>0], data = source.bak)
+					if(weighted) x <-sozz(nam = N[t(data.w[i,])>0], wheight=(data.w[i,t(data.w[i,])>0]), data = source.bak)
+					if(!weighted) x <- sozz(nam = N[t(data.w[i,])>0], data = source.bak)
 					D[i] <- paste(x[x$Frequency==max(x$Frequency),1], collapse = "; ")
 				}
 			}
