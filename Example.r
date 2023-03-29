@@ -28,7 +28,7 @@ floraH <- getVegData(path="")
 
 # 1.4 
 ## choose your data source to proceed
-source <- vegedaz$indicativa   # the options are 'vegedaz$landolt', 'vegedaz$indicativa' from Vegedaz21, 'vegedaz23' (not yet), or 'floraH' from Veg
+source <- vegedaz21$indicativa   # the options are 'vegedaz21$landolt', 'vegedaz21$indicativa' from Vegedaz21, 'vegedaz23' (not yet), or 'floraH' from Veg
 
 # 2.
 # for the exercise create a random dataframe (with species as rows and plots as columns)
