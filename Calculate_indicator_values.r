@@ -6,7 +6,7 @@
 
 
 
-get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", weighted=TRUE, source, na.rm=TRUE, method="mean", socio=T, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=T){
+get.indicator.value <- function(data, corrected.names, value, weighted=TRUE, source, na.rm=TRUE, method="mean", socio=F, propose.alternatives=T, propose.alternatives.full=F, stetigkeit=FALSE, diversities=F){
 
 
 	# Check if value is in the source
@@ -299,7 +299,10 @@ get.indicator.value <- function(data, corrected.names, value="Temperaturzahl", w
 				data.w2 <- data/rowSums(data[,which(!is.na(source))], na.rm = T)  # wheighted but ignore plants without Indicator value
 				data.w2[, is.na(source)] <- NA
 				data <- data.w2
-			}  else data[data>0 & !is.na(data)] <- 1
+			}  else {
+				data[data>0 & !is.na(data)] <- 1
+				data[data==0 | is.na(data)] <- NA
+			}
 			R <- as.numeric()
 			D <- as.character()
 			for(i in 1:nrow(data)){ # loop for each plot
