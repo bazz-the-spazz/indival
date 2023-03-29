@@ -16,19 +16,19 @@ source("transpose_data.r")
 path=("C:/Program Files/Vegedaz/Daten/") # or wherever Vegedaz is located on Windows
 vegedaz21 <- read.vegedaz.data(path)
 
-# 1.2
+# 1.2 not yet ready
 # read data from Vegedaz 2023 (Landolt)
-path=(".../VegedazQtRelease_6/DB/") # or wherever VegedazQtRelease_6 is located on Windows
-vegedaz23 <- read.vegedaz23.data(path)
+# path=(".../VegedazQtRelease_6/DB/") # or wherever VegedazQtRelease_6 is located on Windows
+# vegedaz23 <- read.vegedaz23.data(path)
 
 
 # 1.3
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
 floraH <- getVegData(path="")
 
-# 1.3
+# 1.4 
 ## choose your data source to proceed
-source <- vegedaz23   # the options are 'vegedaz$landolt', 'vegedaz$indicativa' from Vegedaz21, 'vegedaz23', or 'floraH' from Veg
+source <- vegedaz$indicativa   # the options are 'vegedaz$landolt', 'vegedaz$indicativa' from Vegedaz21, 'vegedaz23' (not yet), or 'floraH' from Veg
 
 # 2.
 # for the exercise create a random dataframe (with species as rows and plots as columns)
