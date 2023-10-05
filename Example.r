@@ -15,6 +15,8 @@ source("transpose_data.r")
 # path=("~/.wine/drive_c/Program Files/Vegedaz/Daten/") # on Linux
 path=("C:/Program Files/Vegedaz/Daten/") # or wherever Vegedaz is located on Windows
 vegedaz21 <- read.vegedaz.data(path)
+# vegedaz23 <- read.vegedaz23.data(path)
+
 
 # 1.2 not yet ready
 # read data from Vegedaz 2023 (Landolt)
@@ -26,7 +28,7 @@ vegedaz21 <- read.vegedaz.data(path)
 # for Veg (Flora Helvetica 2014), extract the Zip file and put the file "Zeigerliste.txt" into your work directory.
 floraH <- getVegData(path="")
 
-# 1.4 
+# 1.4
 ## choose your data source to proceed
 source <- vegedaz21$indicativa   # the options are 'vegedaz21$landolt', 'vegedaz21$indicativa' from Vegedaz21, 'vegedaz23' (not yet), or 'floraH' from Veg
 
@@ -55,7 +57,7 @@ corrected.names
 
 
 # 4.
-# Use the get.indicator.value()-function to calculate e.g. mean e.g. Temperaturzahl for the plots
+# Use the get.indicator.value()-function to calculate e.g. mean Temperaturzahl for the plots
 indi.temp.mean <- get.indicator.value(
 	data=d,
 	corrected.names = corrected.names,
@@ -63,10 +65,11 @@ indi.temp.mean <- get.indicator.value(
 	weighted = T,
 	source = source,
 	na.rm = T,
-	propose.alternatives = T)
+	propose.alternatives = T,
+	diversities = F
+	)
 
 indi.temp.mean
-
 
 # 'data=' is your data.frame, column names are the corrected species names and the columns only contain numbers.
 # 'corrected.names=' the string of names received from the choose.name-function in the same order as the columns of data. (optional)

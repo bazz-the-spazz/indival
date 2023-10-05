@@ -231,7 +231,10 @@ get.indicator.value <- function(data, corrected.names, value, weighted=TRUE, sou
 				}
 
 				# Gamma? the numbers equivalent of the diversity index of the pooled samples
-				G <- f( t(apply(x, MARGIN = ifelse(margin==1,2,1) , sum, na.rm=T)) ,Q=q)
+				G <- f( t(colSums(x/rowSums(d, na.rm = T), na.rm = T))/nrow(x), Q=q)
+
+
+
 				# Beta (Following from eq9)
 				B <- G/A
 
@@ -342,7 +345,7 @@ get.indicator.value <- function(data, corrected.names, value, weighted=TRUE, sou
 			Return <- append(Return, list("Species richness"=sr))
 			if(weighted){
 				esh <- diversitee(x = d.diversity.backup, q = 1)
-				Return <- append(Return, list("effective Shannon diversity"=esh$D, "Beta diversity"=esh$beta))
+				Return <- append(Return, list("effective Shannon diversity"=esh$D, "Gamma diversity"=esh$gamma, "Beta diversity"=esh$beta))
 			}
 		}
 
