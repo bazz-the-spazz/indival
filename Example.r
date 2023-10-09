@@ -15,7 +15,7 @@ source("transpose_data.r")
 # path=("~/.wine/drive_c/Program Files/Vegedaz/Daten/") # on Linux
 path=("C:/Program Files/Vegedaz/Daten/") # or wherever Vegedaz is located on Windows
 vegedaz21 <- read.vegedaz.data(path)
-# vegedaz23 <- read.vegedaz23.data(path)
+# vegedaz23 <- read.vegedaz23.data(path) # The path should lead to the 'DB' folder in the 'VegedazQtrelease'
 
 
 # 1.2 not yet ready
